@@ -1,0 +1,33 @@
+[project]
+name = "nvidia-more-battery"
+version = "0.1.0"
+description = "Default template for PDM package"
+authors = [
+    {name = "Kevin McWhirter", email = "klmcw@yahoo.com"},
+]
+dependencies = [
+    "docopt>=0.6.2",
+]
+requires-python = "==3.12.*"
+readme = "README.md"
+license = {text = "MIT"}
+
+
+[tool.pdm]
+distribution = false
+
+[tool.pdm.scripts]
+create_venv = { shell = "pdm venv remove -y in-project; pdm install --prod" }
+install_dev = { shell = "pdm install --dev" }
+clean = { shell = "find . -type d \\( -name __pycache__ -o -name .pytest_cache \\) -exec rm -fr {} \\;" }
+start =  "python -m nvidia_more_battery"
+test = "pytest -vv"
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest>=8.0.1",
+]
+
+[tool.autopep8]
+max-doc-length = 132
+max_line_length = 132
