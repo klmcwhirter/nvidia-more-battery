@@ -34,6 +34,12 @@ JS writes:
 
 `echo 1 | sudo tee /sys/bus/pci/rescan`
 
+## Monitor Power Draw
+
+WIP
+
+[etc/power_mon](etc/power_mon)
+
 ## TODO
 - [X] Remove nvidia devices from PCI bus
 - [ ] Fan profile ?

@@ -1,0 +1,83 @@
+#!/usr/bin/env python
+
+BAT1_UEVENT = '/sys/class/power_supply/BAT1/uevent'
+
+
+class EventValues(dict[str, int | bool]):
+    # See https://unix.stackexchange.com/a/727374 for units of measure
+    KEYS = [
+        '_VOLTAGE_NOW=',  # µV as int
+        '_CURRENT_NOW=',  # µA as int
+        '_CHARGE_NOW=',   # µAh as int
+        '_STATUS=',       # str as bool
+        '_CAPACITY='      # int
+    ]
+
+    def __init_subclass__(cls) -> None:
+        return super().__init_subclass__()
+
+    @property
+    def volts(self) -> int:
+        # µV
+        return self[EventValues.KEYS[0]]
+
+    @property
+    def amps(self) -> int:
+        # µA
+        return self[EventValues.KEYS[1]]
+
+    @property
+    def energy(self) -> int:
+        # µAh
+        return self[EventValues.KEYS[2]]
+
+    @property
+    def power(self) -> int:
+        # µV * µA = pico-watts (10e-12)
+        return self.volts * self.amps
+
+    @property
+    def charging(self) -> bool:
+        return self[EventValues.KEYS[3]]
+
+    @property
+    def capacity(self) -> int:
+        return self[EventValues.KEYS[4]]
+
+    def analyze(self) -> None:
+        lines = []
+        with open(BAT1_UEVENT, 'r') as f:
+            lines = f.readlines()
+
+        for line in lines:
+            for k in EventValues.KEYS:
+                val = line.split('=')[1]
+                if k in line:
+                    self[k] = \
+                        'Charging' in val if k == EventValues.KEYS[3] \
+                        else int(val)
+
+    def report(self) -> None:
+        print(f'power: {self.power / 10e12:0.2f} W')
+        print(f'energy: {self.energy / 10e6:0.2f} Ah')
+        print(f'draw: {self.amps / 10e6:0.2f} A')
+
+        print(f'Charging: {self.charging}')
+        print(f'Capacity: {self.capacity}%')
+
+        if not self.charging:
+            time_rem = (self.energy / 10e6) / (self.amps / 10e6) * 60
+            time_rem_hrs = int(time_rem / 60)
+            time_rem_mins = int(time_rem % 60)
+
+            print(f'time rem: ({time_rem:0.2f}) {time_rem_hrs:d} hr(s) {time_rem_mins:d} mins')
+
+
+def main():
+    vals = EventValues()
+    vals.analyze()
+    vals.report()
+
+
+if __name__ == '__main__':
+    main()

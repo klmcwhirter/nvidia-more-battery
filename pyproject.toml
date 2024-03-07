@@ -19,6 +19,7 @@ clean = { shell = "find . -type d \\( -name __pycache__ -o -name .pytest_cache \
 start = { shell = "sudo python -m nvidia_more_battery" }
 has_nvidia = "python -m nvidia_more_battery has_nvidia"
 test = "pytest -vv"
+power_mon = { shell = "./etc/power_mon" }
 
 [tool.pdm.dev-dependencies]
 dev = ["pytest>=8.0.1"]
