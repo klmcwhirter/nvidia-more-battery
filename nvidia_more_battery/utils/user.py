@@ -4,7 +4,7 @@ import os
 import pwd
 
 
-def is_root() -> None:
+def is_root() -> bool:
     root = pwd.getpwnam('root')
     logging.debug(f'{os.geteuid()=}, {root.pw_uid=}')
     return os.geteuid() == root.pw_uid

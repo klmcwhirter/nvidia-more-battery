@@ -17,6 +17,7 @@ create_venv = { shell = "pdm venv remove -y in-project; pdm install --prod" }
 install_dev = { shell = "pdm install --dev" }
 clean = { shell = "find . -type d \\( -name __pycache__ -o -name .pytest_cache \\) -exec rm -fr {} \\;" }
 start = { shell = "sudo python -m nvidia_more_battery" }
+has_nvidia = "python -m nvidia_more_battery has_nvidia"
 test = "pytest -vv"
 
 [tool.pdm.dev-dependencies]
