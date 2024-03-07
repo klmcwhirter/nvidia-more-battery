@@ -20,32 +20,31 @@ Options:
 import logging
 import sys
 from pprint import pformat
-from typing import Any
 
 from nvidia_more_battery.services.tmpfiles import (delete_no_nvidia,
                                                    system_has_nvidia,
                                                    write_no_nvidia)
-from nvidia_more_battery.utils.args import args_to_opts
+from nvidia_more_battery.utils.args import args_to_opts, opt_is_enabled
 from nvidia_more_battery.utils.logging import config_logger
 
-VERSION = '0.1.0'  # TODO retrieve from pyproject.toml
+VERSION = '0.1.0'
 
 
-def main(**kwargs: dict[str, Any]) -> None:
-    if 'help' in kwargs and kwargs['help']:
+def main(**kwargs: dict[str, bool]) -> None:
+    if opt_is_enabled('help', **kwargs):
         print(__doc__)
         return
-    elif 'version' in kwargs and kwargs['version']:
+    elif opt_is_enabled('version', **kwargs):
         print(f'nvidia_more_battery {VERSION}')
         return
 
     logging.debug(f'starting')
 
-    if 'disable' in kwargs and kwargs['disable']:
+    if opt_is_enabled('disable', **kwargs):
         delete_no_nvidia()
-    elif 'enable' in kwargs and kwargs['enable']:
+    elif opt_is_enabled('enable', **kwargs):
         write_no_nvidia()
-    elif 'has_nvidia' in kwargs and kwargs['has_nvidia']:
+    elif opt_is_enabled('has_nvidia', **kwargs):
         has_nvidia = 'nvidia' if system_has_nvidia() else 'no-nvidia'
         logging.info(f'{has_nvidia=}')
     else:
