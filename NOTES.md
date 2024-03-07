@@ -9,60 +9,34 @@
 * [tmpfiles.d man page](https://www.freedesktop.org/software/systemd/man/latest/tmpfiles.d.html)
 * [Configuration of Temporary Files with systemd-tmpfiles](https://www.baeldung.com/linux/systemd-tmpfiles-configure-temporary-files)
 
+### TODO
+- [X] Remove nvidia devices from PCI bus
+- [ ] Fan profile ?
+- [ ] Battery charge threshold ?
+
 ### Run it
 
 To run this use sudo but NOT as a login !
 
 ```
+$ pdm install
 $ sudo su
 enter creds, etc.
 $ pdm start enable --verbose
 ```
 
-### New adapter method
+## Approach
 
-```python
+The approach taken by the code in this project is outlined in the Linux on the ASUS ROG Zephyrus G14 2021 blog post linked to above.
 
-    NO_NVIDIA_TMPFILE = '/etc/tmpfiles.d/acer_no_gpu.conf'
+It is based on some work by the ASUS Linux project.
 
-    @staticmethod
-    def delete_no_nvidia():
-        os.remove(CachedConfig.NO_NVIDIA_TMPFILE)
-        logging.debug(f'Removed {CachedConfig.NO_NVIDIA_TMPFILE}')
+Instead of blacklisting drivers, it instead leverages the tmpfiles.d infrastructure to disable the hardware by setting a 1 value in the "remove" file for each device as appropriate.
 
-    ...
+The thing that is so nice about this is that they can be brought back at runtime, from within user space and without a reboot. Nice.
 
-    def write_no_nvidia(self):
-        # see find /sys/devices -type d -name '0000:01:00*'
-        # 'w /sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0/remove - - - - 1\n',
-        # 'w /sys/devices/pci0000:00/0000:00:01.0/0000:01:00.1/remove - - - - 1\n',
-        tmpfile_content = [
-            'd /run/no-nvidia 0755 klmcw klmcw\n',
-            'f /run/no-nvidia/in-effect 0644 klmcw klmcw - 1\n'
-        ]
+JS writes:
+> If you want to get the dGPU back, for example to pass it into a VM, simply rescan the PCIe bus:
 
-        for id in find_nvidia_ids_from_lspci():
-            # logging.debug(f'Processing nvidia id={id}')
-            for dir in find_nvidia_sys_device_dirs(id):
-                tmpfile_content.append(f'w {dir}/remove - - - - 1\n')
+`echo 1 | sudo tee /sys/bus/pci/rescan`
 
-        tmpfile_content.append('\n')
-
-        with open(CachedConfig.NO_NVIDIA_TMPFILE, 'w') as f:
-            f.writelines(tmpfile_content)
-        logging.debug(f'Created {CachedConfig.NO_NVIDIA_TMPFILE}')
-
-
-def find_nvidia_sys_device_dirs(nvidia_lspci_id):
-    output = subprocess.check_output(['find', '/sys/devices', '-type', 'd', '-name', f'{nvidia_lspci_id}.*']).decode('utf-8')
-    dirs = [dir for dir in output.splitlines() if 'virtual' not in dir]
-    return dirs
-
-
-def find_nvidia_ids_from_lspci():
-    lspci_output = subprocess.check_output(['lspci']).decode('utf-8')
-    ids = {line.split('.')[0]
-           for line in lspci_output.splitlines()
-           if 'NVIDIA' in line}
-    return ids
-```

@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.1"
-content_hash = "sha256:b4bbd35850f14d46e60884f0285edc83f84b81877c530993c7d997143aa7aa04"
+content_hash = "sha256:c08f3cf8589be38272f882ccd2af607e0b916d5b0036b1269ec655fb9cfbee54"
 
 [[package]]
 name = "colorama"
@@ -17,15 +17,6 @@ marker = "sys_platform == \"win32\""
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
-]
-
-[[package]]
-name = "docopt"
-version = "0.6.2"
-summary = "Pythonic argument parser, that will make you smile"
-groups = ["default"]
-files = [
-    {file = "docopt-0.6.2.tar.gz", hash = "sha256:49b3a825280bd66b3aa83585ef59c4a8c82f2c8a522dbe754a8bc8d08c85c491"},
 ]
 
 [[package]]

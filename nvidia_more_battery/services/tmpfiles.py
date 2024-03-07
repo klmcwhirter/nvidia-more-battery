@@ -3,7 +3,7 @@ import logging
 import os
 import subprocess
 
-from nvidia_more_battery.user import is_root, uid_gid
+from nvidia_more_battery.utils.user import is_root, uid_gid
 
 NO_NVIDIA_TMPFILE = '/etc/tmpfiles.d/nvidia_no_gpu.conf'
 RUN_NO_NVIDIA = f'/run/no-nvidia'
