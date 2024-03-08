@@ -6,8 +6,9 @@ import subprocess
 from nvidia_more_battery.utils.user import is_root, uid_gid
 
 NO_NVIDIA_TMPFILE = '/etc/tmpfiles.d/nvidia_no_gpu.conf'
-RUN_NO_NVIDIA = f'/run/no-nvidia'
-RUN_NO_NVIDIA_IN_EFFECT = os.path.join(RUN_NO_NVIDIA, 'in-effect')
+
+RUN_NO_NVIDIA_IN_EFFECT = '/run/no-nvidia/in-effect'
+RUN_NO_NVIDIA = os.path.dirname(RUN_NO_NVIDIA_IN_EFFECT)
 
 
 def delete_no_nvidia():
@@ -35,7 +36,7 @@ def write_no_nvidia():
     # 'd /run/no-nvidia 0755 klmcw klmcw\n',
     # 'f /run/no-nvidia/in-effect 0644 klmcw klmcw - 1\n'
     uid, gid = uid_gid()
-    tmpfile_content = [
+    tmpfiles_content = [
         f'd {RUN_NO_NVIDIA} 0755 {uid} {gid}\n',
         f'f {RUN_NO_NVIDIA_IN_EFFECT} 0444 {uid} {gid} - 1\n'
     ]
@@ -46,14 +47,19 @@ def write_no_nvidia():
     for id in nvidia_ids:
         # logging.debug(f'Processing nvidia id={id}')
         for dir in find_nvidia_sys_device_dirs(id):
-            tmpfile_content.append(f'w {dir}/remove - - - - 1\n')
+            tmpfiles_content.append(f'w {dir}/remove - - - - 1\n')
 
-    tmpfile_content.append('\n')
+    tmpfiles_content.append('\n')
+
+    # Log the content before the is_root assertion
+    logging.debug('tmpfiles_content=')
+    for s in tmpfiles_content:
+        print(s, end='')
 
     assert is_root(), 'Must be root to perform operation'
 
     with open(NO_NVIDIA_TMPFILE, 'w') as f:
-        f.writelines(tmpfile_content)
+        f.writelines(tmpfiles_content)
 
     logging.debug(f'Created {NO_NVIDIA_TMPFILE}')
 
