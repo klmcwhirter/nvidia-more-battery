@@ -1,0 +1,7 @@
+{
+    "python.testing.pytestArgs": [
+        "nvidia_more_battery"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
+}
