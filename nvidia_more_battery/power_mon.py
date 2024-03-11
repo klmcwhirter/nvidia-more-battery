@@ -56,7 +56,7 @@ class EventValues(dict[str, str]):
 
     @property
     def charging(self) -> bool:
-        return bool(self[EventValues.KEYS[3]])
+        return bool(self[EventValues.KEYS[3]] == 'Charging')
 
     @property
     def capacity(self) -> int:
