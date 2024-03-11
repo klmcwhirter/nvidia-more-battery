@@ -44,9 +44,18 @@ power.help = "Report battery power metrics"
 flake8.cmd = "flake8 ${NVB}"
 mypy.cmd = "mypy -p ${NVB}"
 test.cmd = "pytest"
+tox.cmd = "tox"
 
 [tool.pdm.dev-dependencies]
-dev = ["pytest>=8.0.1", "pytest-cov>=4.1.0", "mypy>=1.9.0", "flake8>=7.0.0"]
+dev = [
+    "pytest>=8.0.1",
+    "pytest-cov>=4.1.0",
+    "mypy>=1.9.0",
+    "flake8>=7.0.0",
+    "tox>=4.14.1",
+    "tox-gh-actions>=3.2.0",
+    "tox-pdm>=0.7.2",
+]
 
 [tool.autopep8]
 max-doc-length = 140
