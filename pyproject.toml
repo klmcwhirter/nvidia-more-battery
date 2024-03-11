@@ -1,6 +1,6 @@
 [project]
 name = "nvidia-more-battery"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Default template for PDM package"
 authors = [{ name = "Kevin McWhirter", email = "klmcw@yahoo.com" }]
 dependencies = []
@@ -8,22 +8,55 @@ requires-python = "==3.12.*"
 readme = "README.md"
 license = { text = "MIT" }
 
+[build-system]
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [tool.pdm]
-distribution = false
+distribution = true
+
+[tool.pdm.build]
+is-purelib = true
+
+[tool.pdm.version]
+source = "scm"
+write_to = "nvidia_more_battery/_version.py"
+write_template = "__version__ = '{}'"
 
 [tool.pdm.scripts]
-create_venv = { shell = "pdm venv remove -y in-project; pdm install --prod" }
-install_dev = { shell = "pdm install --dev" }
-clean = { shell = "find . -type d \\( -name __pycache__ -o -name .pytest_cache \\) -exec rm -fr {} \\;" }
-start = { shell = "sudo python -m nvidia_more_battery" }
-has_nvidia = "python -m nvidia_more_battery has_nvidia"
-test = "pytest -vv"
-power_mon = { shell = "./etc/power_mon" }
+_.env = { NVB = "nvidia_more_battery" }
+create.shell = "pdm venv remove -y in-project; pdm install"
+clean.shell = "find . -type d \\( -name __pycache__ -o -name .pytest_cache \\) -exec rm -fr {} \\;;for d in ${TO_DEL};do echo $d;rm -fr $d;done"
+clean.env = { TO_DEL = ".coverage .mypy_cache .pdm-build dist" }
+clean.help = "Clean environment"
+start.cmd = "python -m ${NVB}"
+has_nvidia.composite = ["start has_nvidia"]
+power.cmd = "python -m ${NVB}.power_mon"
+
+flake8.cmd = "flake8 ${NVB}"
+mypy.cmd = "mypy -p ${NVB}"
+test.cmd = "pytest"
 
 [tool.pdm.dev-dependencies]
-dev = ["pytest>=8.0.1"]
+dev = ["pytest>=8.0.1", "pytest-cov>=4.1.0", "mypy>=1.9.0", "flake8>=7.0.0"]
 
 [tool.autopep8]
-max-doc-length = 132
-max_line_length = 132
+max-doc-length = 140
+max_line_length = 140
+
+[tool.pytest.ini_options]
+addopts = "--cov=nvidia_more_battery"
+
+[tool.mypy]
+mypy_path = "nvidia_more_battery"
+check_untyped_defs = true
+disallow_any_generics = true
+ignore_missing_imports = true
+no_implicit_optional = true
+show_error_codes = true
+strict_equality = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+no_implicit_reexport = true

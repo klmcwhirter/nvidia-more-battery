@@ -8,9 +8,9 @@ def args_to_opts(args: list[str]) -> dict[str, bool]:
     }
 
 
-def opt_is_enabled(opt: str, **kwargs: dict[str, bool]) -> bool:
-    return opt in kwargs and kwargs[opt]
+def opt_is_enabled(opt: str, opts: dict[str, bool]) -> bool:
+    return bool(opt in opts and opts[opt])
 
 
-def strip_dashes(s: str) -> None:
+def strip_dashes(s: str) -> str:
     return s.lstrip('-')

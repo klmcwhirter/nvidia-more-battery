@@ -14,9 +14,11 @@ Get battery time back by making usage of nvidia GPU optional for systems with Op
 ### Run it
 
 ```
+$ pdm create
+
 $ sudo python -m nvidia_more_battery enable --verbose
 $ sudo python -m nvidia_more_battery disable --verbose
-$ python -m nvidia_more_battery has_nvidia
+$ pdm has_nvidia
 ```
 
 ## Approach
@@ -36,11 +38,55 @@ JS writes:
 
 ## Monitor Power Draw
 
-WIP
+There is a script in the `etc` directory ([etc/power_mon](etc/power_mon)) to capture some power consumption metrics. It can be executed by:
 
-[etc/power_mon](etc/power_mon)
+```bash
+$ pdm power  # output to stdout
+
+$ pdm power start  # output to /run/no-nvidia/battery_test_start.txt
+$ pdm power stop   # output to /run/no-nvidia/battery_test_stop.txt
+
+```
+
+If your battery is other than BAT1, then specify the full path to the uevent file on your system.
+
+```bash
+$ pdm power stdout /sys/class/power_supply/BAT0/uevent # output to stdout
+
+$ pdm power start /sys/class/power_supply/BAT0/uevent  # output to /run/no-nvidia/battery_test_start.txt
+$ pdm power stop /sys/class/power_supply/BAT0/uevent   # output to /run/no-nvidia/battery_test_stop.txt
+
+```
+
+### Sample output
+
+```json
+{
+  "timestamp": "2024-03-10T06:04:39.220894",
+  "source": "/sys/class/power_supply/BAT1/uevent",
+  "target": "/run/no-nvidia/battery_test_start.txt",
+  "power": "1.54 W",
+  "energy": "0.38 Ah",
+  "draw": "0.09 A",
+  "charging": false,
+  "capacity": "99%",
+  "time_rem": "(252.69) 4 hr(s) 12 mins"
+}
+```
+
+## Scripts
+
+```
+╭────────────┬───────┬────────────────────────────────────────────╮
+│ Name       │ Type  │ Description                                │
+├────────────┼───────┼────────────────────────────────────────────┤
+│ start      │ cmd   │ python -m nvidia_more_battery              │
+│ has_nvidia │ cmd   │ python -m nvidia_more_battery has_nvidia   │
+│ power      │ cmd   │ python -m nvidia_more_battery.power_mon    │
+╰────────────┴───────┴────────────────────────────────────────────╯
+```
 
 ## TODO
 - [X] Remove nvidia devices from PCI bus
-- [ ] Fan profile ?
-- [ ] Battery charge threshold ?
+- ~~[-] Fan profile~~
+- ~~[-] Battery charge threshold~~

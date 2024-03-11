@@ -21,36 +21,35 @@ import logging
 import sys
 from pprint import pformat
 
+from nvidia_more_battery._version import __version__
 from nvidia_more_battery.services.tmpfiles import (delete_no_nvidia,
                                                    system_has_nvidia,
                                                    write_no_nvidia)
 from nvidia_more_battery.utils.args import args_to_opts, opt_is_enabled
 from nvidia_more_battery.utils.logging import config_logger
 
-VERSION = '0.1.0'
 
-
-def main(**kwargs: dict[str, bool]) -> None:
-    if opt_is_enabled('help', **kwargs):
+def main(opts: dict[str, bool]) -> None:
+    if opt_is_enabled('help', opts):
         print(__doc__)
         return
-    elif opt_is_enabled('version', **kwargs):
-        print(f'nvidia_more_battery {VERSION}')
+    elif opt_is_enabled('version', opts):
+        print(f'nvidia_more_battery {__version__}')
         return
 
-    logging.debug(f'starting')
+    logging.debug('starting')
 
-    if opt_is_enabled('disable', **kwargs):
+    if opt_is_enabled('disable', opts):
         delete_no_nvidia()
-    elif opt_is_enabled('enable', **kwargs):
+    elif opt_is_enabled('enable', opts):
         write_no_nvidia()
-    elif opt_is_enabled('has_nvidia', **kwargs):
+    elif opt_is_enabled('has_nvidia', opts):
         has_nvidia = 'nvidia' if system_has_nvidia() else 'no-nvidia'
         logging.info(f'{has_nvidia=}')
     else:
         print(__doc__)
 
-    logging.debug(f'done')
+    logging.debug('done')
 
 
 if __name__ == '__main__':
@@ -59,4 +58,4 @@ if __name__ == '__main__':
     config_logger(**opts)
     logging.debug(pformat(opts, sort_dicts=False))
 
-    main(**opts)
+    main(opts)

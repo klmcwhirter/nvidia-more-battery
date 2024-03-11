@@ -3,7 +3,10 @@ import logging
 import os
 import subprocess
 
-from nvidia_more_battery.utils.user import is_root, uid_gid
+from nvidia_more_battery.utils import user
+
+MUST_BE_HYBRID = 'System must be in hybrid Optimus mode'
+MUST_BE_ROOT = 'User must have root permissions to perform operation'
 
 NO_NVIDIA_TMPFILE = '/etc/tmpfiles.d/nvidia_no_gpu.conf'
 
@@ -13,7 +16,7 @@ RUN_NO_NVIDIA = os.path.dirname(RUN_NO_NVIDIA_IN_EFFECT)
 
 def delete_no_nvidia():
     if os.path.exists(NO_NVIDIA_TMPFILE):
-        assert is_root(), 'Must be root to perform operation'
+        assert user.is_root(), MUST_BE_ROOT
 
         os.remove(NO_NVIDIA_TMPFILE)
 
@@ -28,14 +31,16 @@ def system_has_nvidia():
 
 def write_no_nvidia():
     logging.debug(f'{RUN_NO_NVIDIA_IN_EFFECT=}')
+    is_root = user.is_root()
 
     nvidia_ids = find_nvidia_ids_from_lspci()
     if len(nvidia_ids) < 1:
-        raise SystemError('System must be in hybrid Optimus mode')
+        msg = MUST_BE_HYBRID if is_root else f'{MUST_BE_HYBRID} and {MUST_BE_ROOT}'
+        raise SystemError(msg)
 
     # 'd /run/no-nvidia 0755 klmcw klmcw\n',
     # 'f /run/no-nvidia/in-effect 0644 klmcw klmcw - 1\n'
-    uid, gid = uid_gid()
+    uid, gid = user.uid_gid()
     tmpfiles_content = [
         f'd {RUN_NO_NVIDIA} 0755 {uid} {gid}\n',
         f'f {RUN_NO_NVIDIA_IN_EFFECT} 0444 {uid} {gid} - 1\n'
@@ -56,7 +61,7 @@ def write_no_nvidia():
     for s in tmpfiles_content:
         print(s, end='')
 
-    assert is_root(), 'Must be root to perform operation'
+    assert user.is_root(), MUST_BE_ROOT
 
     with open(NO_NVIDIA_TMPFILE, 'w') as f:
         f.writelines(tmpfiles_content)
