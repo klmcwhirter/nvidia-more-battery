@@ -1,6 +1,7 @@
 # nvidia-more-battery
 Get battery time back by making usage of nvidia GPU optional for systems with Optimus
 
+![Tests](https://github.com/klmcwhirter/nvidia-more-battery/actions/workflows/tests.yml/badge.svg)
 
 ## Simply disable dGPU
 
