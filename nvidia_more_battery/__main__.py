@@ -23,6 +23,7 @@ from pprint import pformat
 
 from nvidia_more_battery._version import __version__
 from nvidia_more_battery.services.tmpfiles import (delete_no_nvidia,
+                                                   rescan_pcie_bus,
                                                    system_has_nvidia,
                                                    write_no_nvidia)
 from nvidia_more_battery.utils.args import args_to_opts, opt_is_enabled
@@ -41,8 +42,10 @@ def main(opts: dict[str, bool]) -> None:
 
     if opt_is_enabled('disable', opts):
         delete_no_nvidia()
+        rescan_pcie_bus()
     elif opt_is_enabled('enable', opts):
         write_no_nvidia()
+        logging.info('Please reboot so changes can take effect.')
     elif opt_is_enabled('has_nvidia', opts):
         has_nvidia = 'nvidia' if system_has_nvidia() else 'no-nvidia'
         logging.info(f'{has_nvidia=}')

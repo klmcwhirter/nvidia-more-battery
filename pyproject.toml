@@ -30,7 +30,12 @@ clean.shell = "find . -type d \\( -name __pycache__ -o -name .pytest_cache \\) -
 clean.env = { TO_DEL = ".coverage .mypy_cache .pdm-build dist" }
 clean.help = "Clean environment"
 start.cmd = "python -m ${NVB}"
+enable.shell = "sudo python -m ${NVB} enable --verbose"
+enable.help = "Enable nvidia limiting feature; reboot is required"
+disable.shell = "sudo python -m ${NVB} disable --verbose"
+disable.help = "Disable nvidia limiting feature and rescan PCI bus"
 has_nvidia.composite = ["start has_nvidia"]
+has_nvidia.help = "report nvidia is available or not - outputs nvidia or no-nvidia"
 power.cmd = "python -m ${NVB}.power_mon"
 
 flake8.cmd = "flake8 ${NVB}"

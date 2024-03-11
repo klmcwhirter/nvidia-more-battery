@@ -5,7 +5,6 @@ import sys
 from datetime import datetime
 from enum import StrEnum
 from json import dumps
-from pprint import pformat
 
 from nvidia_more_battery.services.tmpfiles import RUN_NO_NVIDIA
 
@@ -116,7 +115,8 @@ def main(args: list[str]) -> None:
         source = args[2] if len(args) > 2 else BAT1_UEVENT
 
         vals = from_file(source)
-        print(pformat(vals, indent=2, sort_dicts=False))
+        # from pprint import pformat
+        # print(pformat(vals, indent=2, sort_dicts=False))
         vals.report(output)
     except ValueError as err:
         print(f'ERROR: {err}; must be one of start or stop.\n\nUSAGE: power_mon.py [{{start|stop|stdout}}] [path to uevent file for BAT]')

@@ -16,20 +16,22 @@ Get battery time back by making usage of nvidia GPU optional for systems with Op
 ```
 $ pdm create
 
-$ sudo python -m nvidia_more_battery enable --verbose
-$ sudo python -m nvidia_more_battery disable --verbose
+$ pdm enable  # create the tmpfiles.d file to "enable" the feature; reboot required
+$ pdm disable  # remove the tmpfiles.d file and cause the pci bus to be rescanned; NO reboot required
 $ pdm has_nvidia
 ```
 
 ## Approach
 
-The approach taken by the code in this project is outlined in the Linux on the ASUS ROG Zephyrus G14 2021 blog post linked to above.
+The approach taken by the code in this project is outlined in the [Linux on the ASUS ROG Zephyrus G14 2021](https://blog.nil.im/?7b) blog post linked to above.
 
 It is based on some work by the ASUS Linux project.
 
-Instead of blacklisting drivers, it instead leverages the tmpfiles.d infrastructure to disable the hardware by setting a 1 value in the "remove" file for each device as appropriate.
+Instead of blacklisting drivers, it leverages the systemd tmpfiles.d infrastructure to disable the hardware by setting a 1 value in the "remove" file for each device as appropriate.
 
-The thing that is so nice about this is that they can be brought back at runtime, from within user space and without a reboot. Nice.
+> Note there are other ways to accomplish this on Linux without systemd, but it needs to happen early enough in the boot process to influence kernel behavior.
+
+The thing that is so nice about this is that the items deconfigured from the PCIe bus can be brought back at runtime, from within user space and without a reboot. Nice.
 
 JS writes:
 > If you want to get the dGPU back, for example to pass it into a VM, simply rescan the PCIe bus:
@@ -38,7 +40,9 @@ JS writes:
 
 ## Monitor Power Draw
 
-There is a script in the `etc` directory ([etc/power_mon](etc/power_mon)) to capture some power consumption metrics. It can be executed by:
+Since my persoinal goal is improvement of battery life, I thought it important to have a simple way to monitor power drain and battery time remaining.
+
+There is a script ([nvidia_more_battery/power_mon.py](nvidia_more_battery/power_mon.py)) to capture some power consumption metrics. It can be executed by:
 
 ```bash
 $ pdm power  # output to stdout
@@ -73,17 +77,19 @@ $ pdm power stop /sys/class/power_supply/BAT0/uevent   # output to /run/no-nvidi
   "time_rem": "(252.69) 4 hr(s) 12 mins"
 }
 ```
+> Note that I am consistently getting 4 to 4-1/2 hr battery life using this approach.
 
 ## Scripts
 
 ```
-╭────────────┬───────┬────────────────────────────────────────────╮
-│ Name       │ Type  │ Description                                │
-├────────────┼───────┼────────────────────────────────────────────┤
-│ start      │ cmd   │ python -m nvidia_more_battery              │
-│ has_nvidia │ cmd   │ python -m nvidia_more_battery has_nvidia   │
-│ power      │ cmd   │ python -m nvidia_more_battery.power_mon    │
-╰────────────┴───────┴────────────────────────────────────────────╯
+╭────────────┬───────────┬─────────────────────────────────────────────────────────────────╮
+│ Name       │ Type      │ Description                                                     │
+├────────────┼───────────┼─────────────────────────────────────────────────────────────────┤
+│ disable    │ shell     │ Disable nvidia limiting feature and rescan PCI bus; no reboot   │
+│ enable     │ shell     │ Enable nvidia limiting feature; reboot is required              │
+│ has_nvidia │ composite │ report nvidia is available or not - outputs nvidia or no-nvidia │
+│ power      │ cmd       │ python -m ${NVB}.power_mon                                      │
+╰────────────┴───────────┴─────────────────────────────────────────────────────────────────╯
 ```
 
 ## TODO
