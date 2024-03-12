@@ -4,7 +4,7 @@ dynamic = ["version"]
 description = "Default template for PDM package"
 authors = [{ name = "Kevin McWhirter", email = "klmcw@yahoo.com" }]
 dependencies = []
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 readme = "README.md"
 license = { text = "MIT" }
 
@@ -25,6 +25,9 @@ is-purelib = true
 
 [tool.pdm.version]
 source = "scm"
+tag_regex = "^(?:[\\w-]+-)?(?P<version>[vV]?\\d+(?:\\.\\d+){0,2})"
+# version_format coming soon - https://github.com/pdm-project/pdm-backend/commit/4f20cfd51928b9e4d8b1a941630865755b569b19
+# version_format = "nvidia_more_battery.version:format_version" 
 write_to = "nvidia_more_battery/_version.py"
 write_template = "__version__ = '{}'"
 
