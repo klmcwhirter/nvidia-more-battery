@@ -1,7 +1,13 @@
 # nvidia-more-battery
 Get battery time back by making usage of nvidia GPU optional for systems with Optimus
 
-![Tests](https://github.com/klmcwhirter/nvidia-more-battery/actions/workflows/tests.yml/badge.svg)
+[![Tests](https://github.com/klmcwhirter/nvidia-more-battery/actions/workflows/tests.yml/badge.svg)](https://github.com/klmcwhirter/nvidia-more-battery/actions/)
+[![Code style: flake8](https://img.shields.io/badge/code%20style-flake8-green.svg)](https://github.com/pycqa/flake8)
+[![Code Analysis: mypy](https://img.shields.io/badge/code%20analysis-mypy-blue.svg)](https://github.com/python/mypy)
+![Tox Versions](https://img.shields.io/badge/tox-v4-yellowgreen)
+![NVIDIA](https://img.shields.io/badge/nvidia-optimus-76B900?logo=NVIDIA)
+![systemd](https://img.shields.io/badge/linux-systemd-FCC624?logo=Linux)
+![Python](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2Fklmcwhirter%2Fnvidia-more-battery%2Fmaster%2Fpyproject.toml&logo=Python)
 
 ## Simply disable dGPU
 
