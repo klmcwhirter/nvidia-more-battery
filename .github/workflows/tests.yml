@@ -24,11 +24,15 @@ jobs:
       uses: pdm-project/setup-pdm@v4
       with:
         python-version: ${{ matrix.python-version }}
-        cache: true
+        cache: false
 
     - name: Install dependencies
       run: |
         pdm install
+
+    - name: Clean environment
+      run: |
+        pdm clean
 
     - name: Test with tox
       run: |
