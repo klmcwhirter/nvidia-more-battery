@@ -8,6 +8,11 @@ requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
 
+
+[project.urls]
+Homepage = "https://github.com/klmcwhirter/nvidia-more-battery"
+Repository = "https://github.com/klmcwhirter/nvidia-more-battery"
+
 [build-system]
 requires = ["pdm-backend"]
 build-backend = "pdm.backend"
