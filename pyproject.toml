@@ -35,7 +35,7 @@ write_template = "__version__ = '{}'"
 _.env = { NVB = "nvidia_more_battery" }
 create.shell = "pdm venv remove -y in-project; pdm install"
 clean.shell = "for d in ${TO_DEL};do echo $d;rm -fr $d;done"
-clean.env = { TO_DEL = ".coverage .mypy_cache .pdm-build __pycache__ .pytest_cache .tox dist" }
+clean.env = { TO_DEL = ".coverage coverage.xml .mypy_cache .pdm-build __pycache__ .pytest_cache .tox dist" }
 clean.help = "Clean environment"
 
 start.cmd = "python -m ${NVB}"
@@ -52,6 +52,7 @@ power.help = "Report battery power metrics"
 flake8.cmd = "flake8 ${NVB}"
 mypy.cmd = "mypy -p ${NVB}"
 test.cmd = "pytest"
+testcov.cmd = "pytest --cov=nvidia_more_battery --cov-report=xml:coverage.xml --cov-report=term"
 tox.cmd = "tox"
 
 [tool.pdm.dev-dependencies]
@@ -70,7 +71,7 @@ max-doc-length = 140
 max_line_length = 140
 
 [tool.pytest.ini_options]
-addopts = "--cov=nvidia_more_battery"
+addopts = ""
 
 [tool.mypy]
 mypy_path = "nvidia_more_battery"
