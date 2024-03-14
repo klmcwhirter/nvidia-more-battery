@@ -34,8 +34,8 @@ write_template = "__version__ = '{}'"
 [tool.pdm.scripts]
 _.env = { NVB = "nvidia_more_battery" }
 create.shell = "pdm venv remove -y in-project; pdm install"
-clean.shell = "for d in ${TO_DEL};do echo $d;rm -fr $d;done"
-clean.env = { TO_DEL = ".coverage coverage.xml .mypy_cache .pdm-build __pycache__ .pytest_cache .tox dist" }
+clean.shell = "sudo find . -type d -name __pycache__ -exec rm -fr {} \\;;for d in ${TO_DEL};do echo $d;rm -fr $d;done"
+clean.env = { TO_DEL = ".coverage coverage.xml .mypy_cache .pdm-build .pytest_cache .tox dist" }
 clean.help = "Clean environment"
 
 start.cmd = "python -m ${NVB}"
@@ -85,4 +85,4 @@ warn_redundant_casts = true
 warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
-no_implicit_reexport = true
+no_implicit_reexport = false
