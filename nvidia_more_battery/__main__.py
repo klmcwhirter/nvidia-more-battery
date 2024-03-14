@@ -1,7 +1,7 @@
 '''nvidia_more_battery - Get battery time back by making usage of nvidia GPU optional for systems with Optimus
 
 Usage:
-    nvidia_more_battery {disable | enable | has_nvidia} [--help] [--verbose] [--version]
+    nvidia_more_battery {disable | enable | has_nvidia} [--rescan] [--help] [--verbose] [--version]
 
 Commands:
     disable         Revert changes made to enable nvidia_more_battery
@@ -9,6 +9,7 @@ Commands:
     has_nvidia      Reports whether or not at least one NVIDIA device is present on the PCI bus
 
 Options:
+    --rescan        Optionally rescan PCI bus when disable is executed
     --verbose       Enable debug logging
     --version       Output the current version and exit
     --help          Show this help
@@ -42,7 +43,11 @@ def main(opts: dict[str, bool]) -> None:
 
     if opt_is_enabled('disable', opts):
         delete_no_nvidia()
-        rescan_pcie_bus()
+
+        if opt_is_enabled('rescan', opts):
+            rescan_pcie_bus()
+        else:
+            logging.info('Please reboot so changes can take effect.')
     elif opt_is_enabled('enable', opts):
         write_no_nvidia()
         logging.info('Please reboot so changes can take effect.')
