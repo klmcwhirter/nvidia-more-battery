@@ -20,6 +20,8 @@ Get battery time back by making usage of nvidia GPU optional for systems with Op
 
 ### Run it
 
+First install `pdm`. See https://pdm-project.org/latest/#recommended-installation-method.
+
 ```
 $ pdm create
 
