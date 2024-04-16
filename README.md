@@ -17,7 +17,14 @@ Get battery time back by making usage of nvidia GPU optional for systems with Op
   - [Optional - Actually secure boot on Fedora 39](https://blog.nil.im/?80)
 * [tmpfiles.d man page](https://www.freedesktop.org/software/systemd/man/latest/tmpfiles.d.html)
 * [Configuration of Temporary Files with systemd-tmpfiles](https://www.baeldung.com/linux/systemd-tmpfiles-configure-temporary-files)
+
+### Nvidia Driver References
 * [How to Install NVIDIA Drivers on Fedora 39, 38 Linux](https://www.linuxcapable.com/how-to-install-nvidia-drivers-on-fedora-linux/)
+* [NVIDIA XFree86 README](http://us.download.nvidia.com/XFree86/Linux-x86_64/550.67/README/index.html)
+* [Chapter 17. Using the NVIDIA Driver with Optimus Laptops](http://us.download.nvidia.com/XFree86/Linux-x86_64/550.67/README/optimus.html)
+* [Chapter 35. PRIME Render Offload](http://us.download.nvidia.com/XFree86/Linux-x86_64/550.67/README/primerenderoffload.html)
+* [archwiki PRIME](https://wiki.archlinux.org/title/PRIME)
+* [archwiki NVIDIA](https://wiki.archlinux.org/title/NVIDIA)
 
 ### Run it
 
