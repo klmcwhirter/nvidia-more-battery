@@ -3,6 +3,13 @@ import logging
 import os
 import pwd
 
+MUST_BE_ROOT = 'User must have root permissions to perform operation'
+
+
+def assure_root() -> None:
+    if not is_root():
+        raise SystemError(MUST_BE_ROOT)
+
 
 def is_root() -> bool:
     root = pwd.getpwnam('root')

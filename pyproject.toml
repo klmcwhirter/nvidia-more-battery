@@ -46,6 +46,11 @@ disable.help = "Disable nvidia limiting feature and rescan PCI bus"
 has_nvidia.composite = ["start has_nvidia"]
 has_nvidia.help = "Report nvidia is available or not - outputs nvidia or no-nvidia"
 
+wayland.shell = "sudo python -m ${NVB} wayland --verbose"
+wayland.help = "Enable wayland settings for hybrid mode; reboot is required"
+disable-wayland.shell = "sudo python -m ${NVB} disable-wayland --verbose"
+disable-wayland.help = "Revert changes made to enable wayland support; reboot is required"
+
 power.cmd = "python -m ${NVB}.power_mon"
 power.help = "Report battery power metrics"
 

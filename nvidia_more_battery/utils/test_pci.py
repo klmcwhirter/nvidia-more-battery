@@ -4,9 +4,7 @@ from typing import Callable
 
 import pytest
 
-import nvidia_more_battery.services.tmpfiles
-from nvidia_more_battery.services.tmpfiles import (find_nvidia_ids_from_lspci,
-                                                   system_has_nvidia)
+from nvidia_more_battery.utils import pci
 
 
 def fake_ids() -> set[str]:
@@ -24,9 +22,9 @@ def fake_ids() -> set[str]:
     ]
 )
 def test_system_has_nvidia(monkeypatch, ids: Callable[[], set[str]], expected: bool):
-    monkeypatch.setattr(nvidia_more_battery.services.tmpfiles, "find_nvidia_ids_from_lspci", ids)
+    monkeypatch.setattr(pci, "find_nvidia_ids_from_lspci", ids)
 
-    rc = system_has_nvidia()
+    rc = pci.system_has_nvidia()
     assert expected == rc
 
 
@@ -40,7 +38,7 @@ def test_find_nvidia_ids_from_lspci_should_return_nvidia(monkeypatch):
 
     monkeypatch.setattr(subprocess, "check_output", mockreturn)
 
-    ids = find_nvidia_ids_from_lspci()
+    ids = pci.find_nvidia_ids_from_lspci()
 
     expected = fake_ids()
     assert expected == ids
