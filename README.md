@@ -1,4 +1,13 @@
 # nvidia-more-battery
+> [!CAUTION]
+> This approach does not seem to work with older or newer NVIDIA GPUs.
+> 
+> In addition, it is tightly coupled to `systemd` via its use of the `tmpfiles.d` feature.
+> 
+> Also, the reloading of PCI devices without reboot is unstable in practice. Just don't try to rely upon it.
+> 
+> As such, I have archived this repo.
+
 Get battery time back by making usage of nvidia GPU optional for systems with Optimus
 
 [![Tests](https://github.com/klmcwhirter/nvidia-more-battery/actions/workflows/tests.yml/badge.svg)](https://github.com/klmcwhirter/nvidia-more-battery/actions/)
